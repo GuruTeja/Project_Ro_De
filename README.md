@@ -4,7 +4,7 @@
 
 Performed tasks:
 
-1 . Added 20 NLP questions and answers, and Ro-De,user communication questions like
+1 . We have implemented Ro-De and user communication sessions. added 20 NlP question and answers. 
 Example:
 User : I am bored
 Ro-De: is that so? WHAT CAN I DO FOR YOU?
