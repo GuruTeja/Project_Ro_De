@@ -75,11 +75,23 @@ double excess1 = 0;
 
 double pic =0;
 int result = 0;
+int start = 0;
+int start1 = 0;
 int result1 = 0; //object1
 int sing_communication = 0;
 int dance_communication = 0;
 int bored_communication = 0;
 int greeting_communication = 0;
+int stop_greet = 0;
+int stop_greet1 = 0;
+
+NSDate *greet_time;
+NSDate *nextgreet_time;
+
+NSDate *greet_time1;
+NSDate *nextgreet_time1;
+//NSTimeInterval *stopgreet_time;
+
 int stop = 0;
 
 
@@ -426,23 +438,40 @@ double takePicture =0;
         double area = contourArea(scene_corners);
         cout<<"\nArea of object1 : "<<area;
         
-        if(area>120000)
+        if(area>110000)
         {
-            if(result >= 1){
+            
+            
+            if (stop_greet == 1){
+                
+                nextgreet_time = [NSDate date];
+                NSTimeInterval stopgreet_time = [nextgreet_time timeIntervalSinceDate:greet_time];
+                stopgreet_time = stopgreet_time/60.0;
+                NSString* time = [NSString stringWithFormat:@"%f", stopgreet_time];
+                NSLog(@"time is %@",time);
+                if(stopgreet_time > 1){
+                    start = 0;
+                }
+                else{
+                    start = 1;
+                }
+            }
+            
+            if(start == 0){
+                //if(result >= 1){
+                
                 [self.Romo3 stopDriving];
                 cout<<"\n GOT IT !!!!\n Robo detected";
-                //self.Romo.expression=RMCharacterExpressionChuckle;
+                greet_time = [NSDate date];
                 self.Romo.emotion=RMCharacterEmotionHappy;
-                [self speakText:@"Hi Robo, this is  Rocky . Nice to meet you"];
-                [self.Romo3 turnByAngle:0 withRadius:0.0 completion:^(BOOL success, float heading) {
-                    if (success) {
-                        [self.Romo3 driveForwardWithSpeed:0.2];
-                        [self.Romo3 stopDriving];
-                    }
-                }];
+                [self speakText:@"Hi Robo, this is  Rody . Nice to meet you"];
                 result = 0;
+                stop_greet = 1;
+                //[self perform:@"TESTGO"];
+                //}
+                //result = result + 1;
             }
-            result = result + 1;
+            
         }
         //object2
         //-- Get the corners from the image_2 ( the object to be "detected" )
@@ -467,13 +496,31 @@ double takePicture =0;
         if (area1>800)
         {
             
-            if(result1 > 1){
-                cout<<"\n GOT IT !!!!\n detected is lays";
-                [self speakText:@"It's Lays. I'm So hungry, lets eat"];
-                self.Romo.emotion=RMCharacterEmotionDelighted;
-                result1 = 0;
+            if (stop_greet1 == 1){
+                nextgreet_time1 = [NSDate date];
+                NSTimeInterval stopgreet_time1 = [nextgreet_time1 timeIntervalSinceDate:greet_time1];
+                stopgreet_time1 = stopgreet_time1/60.0;
+                NSString* time1 = [NSString stringWithFormat:@"%f", stopgreet_time1];
+                NSLog(@"%@",time1);
+                if(stopgreet_time1 > 0.5){
+                    start1 = 0;
+                }
+                else{
+                    start1 = 1;
+                }
             }
-            result1 = result1 +1;
+            
+            if(start1 == 0){
+                if(result1 >= 1){
+                    cout<<"\n GOT IT !!!!\n detected is lays";
+                    [self speakText:@"It's Lays. I'm So hungry, lets eat"];
+                    self.Romo.emotion=RMCharacterEmotionDelighted;
+                    result1 = 0;
+                    stop_greet1 = 1;
+                }
+                result1 = result1 + 1;
+            }
+            
         }
         
         
@@ -933,7 +980,7 @@ double takePicture =0;
             [self.Romo3 driveBackwardWithSpeed:speed1];
         } else if ([string isEqualToString:@"GO"]) {
             if(speed <= 0){
-                speed = 0.3;
+                speed = 0.1;
                 [self.Romo3 driveForwardWithSpeed:speed];
                 NSLog(@"%f",speed);
             }
@@ -962,6 +1009,13 @@ double takePicture =0;
             [self.Romo3 turnByAngle:0 withRadius:0.0 completion:^(BOOL success, float heading) {
                 if (success) {
                     [self.Romo3 driveForwardWithSpeed:speed1 - 0.3];
+                }
+            }];
+        }
+        else if ([string isEqualToString:@"TESTGO"]) {
+            [self.Romo3 turnByAngle:0 withRadius:0.0 completion:^(BOOL success, float heading) {
+                if (success) {
+                    [self.Romo3 driveForwardWithSpeed:0.1];
                 }
             }];
         }
